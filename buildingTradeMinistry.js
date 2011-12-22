@@ -563,6 +563,7 @@ if (typeof YAHOO.lacuna.buildings.Trade == "undefined" || !YAHOO.lacuna.building
 		},
 		AvailablePopulate : function() {
 			var details = Dom.get("tradeAvailableDetails");
+			var sortedTrades	= new Array();
 			
 			if(details) {
 				var trades = this.availableTrades.trades,
@@ -573,7 +574,13 @@ if (typeof YAHOO.lacuna.buildings.Trade == "undefined" || !YAHOO.lacuna.building
 				details.innerHTML = "";
 								
 				for(var i=0; i<trades.length; i++) {
-					var trade = trades[i],
+					var trade	= trades[i];
+					
+					sortedTrades[trade.offer].push(trade);
+				}
+
+				for (var i=0; i<sortedTrades.length; i++) {
+					var trade = sortedTrades[i].pop(),
 						bbtn,
 						nUl = ul.cloneNode(false),
 						nLi = li.cloneNode(false);
@@ -600,7 +607,8 @@ if (typeof YAHOO.lacuna.buildings.Trade == "undefined" || !YAHOO.lacuna.building
 					
 					nLi = li.cloneNode(false);
 					Dom.addClass(nLi,"tradeOffer");
-					nLi.innerHTML = Lib.formatInlineList(trade.offer);
+					var offerText	= trade.offer + sortedTrades[i].length;
+					nLi.innerHTML = Lib.formatInlineList(offerText);
 					nUl.appendChild(nLi);
 
 					nLi = li.cloneNode(false);
@@ -623,7 +631,7 @@ if (typeof YAHOO.lacuna.buildings.Trade == "undefined" || !YAHOO.lacuna.building
 					nUl.appendChild(nLi);
 								
 					details.appendChild(nUl);
-					
+
 				}
 				//wait for tab to display first
 				setTimeout(function() {
